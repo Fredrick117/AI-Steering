@@ -12,8 +12,9 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main src/main.cpp)
+add_executable(main src/main.cpp "src/game.h" "src/game.cpp" "src/gameobject.h" "src/gameobject.cpp" "src/rigidbody.h" "src/rigidbody.cpp" "src/boid/boid.h" "src/boid/boid.cpp" "src/component.h" "src/component.cpp" "src/renderable.h" "src/boid/boid.h" "src/renderable.cpp" "src/steeringoutput.h" "src/steeringoutput.cpp" "src/steeringbehavior.h" "src/steeringbehavior.cpp")
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics)
+target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/src)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)
