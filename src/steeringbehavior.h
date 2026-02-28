@@ -25,3 +25,15 @@ private:
 	GameObject* parent;
 	float maxSpeed = 500.0f;
 };
+
+class FleeBehavior : public SteeringBehavior
+{
+public:
+	FleeBehavior() = delete;
+	FleeBehavior(GameObject* parent, float maxSpeed) : parent(parent), maxSpeed(maxSpeed) {};
+
+private:
+	sf::Vector2f target;
+	GameObject* parent;
+	float maxSpeed = 500.0f;
+};

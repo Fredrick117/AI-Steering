@@ -20,11 +20,6 @@ void GameObject::Update(float deltaTime)
 	}
 }
 
-void GameObject::Draw()
-{
-
-}
-
 void GameObject::AddComponent(Component* component)
 {
 	component->SetOwner(this);

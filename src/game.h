@@ -20,7 +20,14 @@ public:
 	void HandleInput();
 	void Draw();
 
+	void CreateBoidDebugMenu();
+
 	sf::RenderWindow window;
 
 	std::vector<GameObject*> gameObjects;
+
+	bool checkbox1 = true;
+	bool checkbox2 = false;
+
+	int numBoids = 0;
 };

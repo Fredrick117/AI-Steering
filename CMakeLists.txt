@@ -12,9 +12,30 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
+FetchContent_Declare(imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    GIT_TAG 97428e8ac99e339ce05eee531cf55b77b29ea709
+)
+FetchContent_MakeAvailable(imgui)
+
+FetchContent_Declare(ImGui-SFML
+    GIT_REPOSITORY https://github.com/SFML/imgui-sfml.git
+    GIT_TAG ab6b5cfeddb4eb980a42b526dc66901a0976ff6d
+)
+
+message(STATUS "Fetching ImGui-SFML...")
+
+set(IMGUI_DIR ${imgui_SOURCE_DIR})
+set(IMGUI_SFML_FIND_SFML OFF)
+set(IMGUI_SFML_IMGUI_DEMO ON)
+
+FetchContent_MakeAvailable(ImGui-SFML)
+
 add_executable(main src/main.cpp "src/game.h" "src/game.cpp" "src/gameobject.h" "src/gameobject.cpp" "src/rigidbody.h" "src/rigidbody.cpp" "src/boid/boid.h" "src/boid/boid.cpp" "src/component.h" "src/component.cpp" "src/renderable.h" "src/boid/boid.h" "src/renderable.cpp" "src/steeringoutput.h" "src/steeringoutput.cpp" "src/steeringbehavior.h" "src/steeringbehavior.cpp")
 target_compile_features(main PRIVATE cxx_std_17)
-target_link_libraries(main PRIVATE SFML::Graphics)
+#target_link_libraries(main PRIVATE imgui)
+target_link_libraries(main PRIVATE ImGui-SFML::ImGui-SFML)
 target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/imgui)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)

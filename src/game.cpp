@@ -1,9 +1,13 @@
 #include "game.h"
 
+#include <imgui.h>
+#include <imgui-SFML.h>
+
 Game::Game()
 {
 	window = sf::RenderWindow(sf::VideoMode({ 800, 800 }), "Boids-A-Million");
-	window.setFramerateLimit(30);
+	window.setFramerateLimit(60);
+	ImGui::SFML::Init(window);	// TODO: cassert
 }
 
 Game::~Game()
@@ -12,6 +16,8 @@ Game::~Game()
 	{
 		delete gameObject;
 	}
+
+	ImGui::SFML::Shutdown();
 }
 
 void Game::Run()
@@ -29,12 +35,15 @@ void Game::Run()
 	{
 		HandleInput();
 		Update(dtClock.restart().asSeconds());
+		CreateBoidDebugMenu();
 		Draw();
 	}
 }
 
 void Game::Update(float deltaTime)
 {
+	ImGui::SFML::Update(window, sf::seconds(deltaTime));
+
 	for (auto& gameObject : gameObjects)
 	{
 		gameObject->Update(deltaTime);
@@ -43,13 +52,16 @@ void Game::Update(float deltaTime)
 
 void Game::HandleInput()
 {
-	while (const std::optional event = window.pollEvent())
+	while (const auto event = window.pollEvent())
 	{
+		ImGui::SFML::ProcessEvent(window, *event);
+
 		if (event->is<sf::Event::Closed>())
 		{
 			window.close();
 		}
-		else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+
+		if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
 		{
 			if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
 			{
@@ -60,6 +72,13 @@ void Game::HandleInput()
 		{
 			if (mousePressed->button == sf::Mouse::Button::Left)
 			{
+				ImGuiIO& io = ImGui::GetIO();
+				if (io.WantCaptureMouse)
+				{
+					io.AddMouseButtonEvent(0, true);
+					continue;
+				}
+
 				for (auto& gameObject : gameObjects)
 				{
 					if (Boid* b = dynamic_cast<Boid*>(gameObject))
@@ -85,5 +104,18 @@ void Game::Draw()
 		}
 	}
 
+	ImGui::SFML::Render(window);
+
 	window.display();
+}
+
+void Game::CreateBoidDebugMenu()
+{
+	ImGui::Begin("AI Movement Behaviors");
+	ImGui::BeginChild("Basic Steering");
+	ImGui::Checkbox("Seek", &this->checkbox1);
+	ImGui::Checkbox("Arrive", &this->checkbox2);
+	ImGui::SliderInt("Number of boids", &numBoids, 0, 100);
+	ImGui::EndChild();
+	ImGui::End();
 }
