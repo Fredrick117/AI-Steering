@@ -1,5 +1,5 @@
 #include "gameobject.h"
-#include "component.h"
+#include "components/component.h"
 
 GameObject::GameObject(sf::Vector2f goPosition, sf::Vector2f goRotation) 
 	: position(goPosition), rotation(goRotation) {}

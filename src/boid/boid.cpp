@@ -1,10 +1,13 @@
 #include "boid.h"
-#include "rigidbody.h"
-#include "steeringbehavior.h"
+#include "components/rigidbody.h"
+#include "steering/steeringbehavior.h"
+#include "steering/seek.h"
+#include "steering/flee.h"
 
 Boid::Boid()
 {
 	this->AddComponent(new SeekBehavior(this, 500.0f));
+	this->AddComponent(new FleeBehavior(this, 500.0f));
 }
 
 void Boid::Update(float deltaTime)

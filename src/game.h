@@ -6,8 +6,14 @@
 
 #include "boid/boid.h"
 #include "gameobject.h"
-#include "rigidbody.h"
-#include "renderable.h"
+#include "components/component.h"
+#include "components/renderable.h"
+#include "components/rigidbody.h"
+#include "steering/flee.h"
+#include "steering/seek.h"
+
+#include <imgui.h>
+#include <imgui-SFML.h>
 
 class Game
 {
@@ -26,8 +32,9 @@ public:
 
 	std::vector<GameObject*> gameObjects;
 
-	bool checkbox1 = true;
-	bool checkbox2 = false;
+	// TODO: currently applies to all boids, only apply to selected ones in the future?
+	bool seekEnabled = true;
+	bool fleeEnabled = false;
 
 	int numBoids = 0;
 };

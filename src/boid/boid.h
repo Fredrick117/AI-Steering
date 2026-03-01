@@ -3,8 +3,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "gameobject.h"
-#include "steeringoutput.h"
-#include "steeringbehavior.h"
+#include "steering/steeringoutput.h"
+#include "steering/steeringbehavior.h"
 
 class Rigidbody;
 

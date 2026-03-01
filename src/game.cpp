@@ -1,8 +1,5 @@
 #include "game.h"
 
-#include <imgui.h>
-#include <imgui-SFML.h>
-
 Game::Game()
 {
 	window = sf::RenderWindow(sf::VideoMode({ 800, 800 }), "Boids-A-Million");
@@ -83,7 +80,15 @@ void Game::HandleInput()
 				{
 					if (Boid* b = dynamic_cast<Boid*>(gameObject))
 					{
-						b->GetComponent<SeekBehavior>()->SetTarget(static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
+						// TODO: only perform these behaviors if components exist
+						if (seekEnabled)
+						{
+							b->GetComponent<SeekBehavior>()->SetTarget(static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
+						}
+						else if (fleeEnabled)
+						{
+							b->GetComponent<FleeBehavior>()->SetTarget(static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
+						}
 					}
 				}
 			}
@@ -112,10 +117,22 @@ void Game::Draw()
 void Game::CreateBoidDebugMenu()
 {
 	ImGui::Begin("AI Movement Behaviors");
+
 	ImGui::BeginChild("Basic Steering");
-	ImGui::Checkbox("Seek", &this->checkbox1);
-	ImGui::Checkbox("Arrive", &this->checkbox2);
+	if (ImGui::Checkbox("Seek", &this->seekEnabled))
+	{
+		std::cout << "Seek selected!" << std::endl;
+		fleeEnabled = false;
+	}
+
+	if (ImGui::Checkbox("Flee", &this->fleeEnabled))
+	{
+		std::cout << "Flee selected!" << std::endl;
+		seekEnabled = false;
+	}
+	ImGui::PushItemWidth(100.0f);
 	ImGui::SliderInt("Number of boids", &numBoids, 0, 100);
 	ImGui::EndChild();
+
 	ImGui::End();
 }
