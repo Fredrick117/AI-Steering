@@ -1,8 +1,9 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include "boid/boid.h"
+#include <vector>
 
-static void LigmaBalls(sf::Vector2f)
+static inline std::vector<Boid*> GetAllBoids()
 {
-
+	
 }

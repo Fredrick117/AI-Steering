@@ -16,7 +16,6 @@ public:
 	std::vector<Component*> components;
 
 	virtual void Update(float deltaTime);
-	void Draw();
 
 	void AddComponent(Component* component);
 	

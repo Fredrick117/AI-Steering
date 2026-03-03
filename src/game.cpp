@@ -3,7 +3,8 @@
 Game::Game()
 {
 	window = sf::RenderWindow(sf::VideoMode({ 800, 800 }), "Boids-A-Million");
-	window.setFramerateLimit(30);
+	window.setFramerateLimit(60);
+	ImGui::SFML::Init(window);	// TODO: cassert
 }
 
 Game::~Game()
@@ -12,6 +13,8 @@ Game::~Game()
 	{
 		delete gameObject;
 	}
+
+	ImGui::SFML::Shutdown();
 }
 
 void Game::Run()
@@ -29,12 +32,15 @@ void Game::Run()
 	{
 		HandleInput();
 		Update(dtClock.restart().asSeconds());
+		CreateBoidDebugMenu();
 		Draw();
 	}
 }
 
 void Game::Update(float deltaTime)
 {
+	ImGui::SFML::Update(window, sf::seconds(deltaTime));
+
 	for (auto& gameObject : gameObjects)
 	{
 		gameObject->Update(deltaTime);
@@ -43,13 +49,16 @@ void Game::Update(float deltaTime)
 
 void Game::HandleInput()
 {
-	while (const std::optional event = window.pollEvent())
+	while (const auto event = window.pollEvent())
 	{
+		ImGui::SFML::ProcessEvent(window, *event);
+
 		if (event->is<sf::Event::Closed>())
 		{
 			window.close();
 		}
-		else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+
+		if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
 		{
 			if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
 			{
@@ -60,11 +69,26 @@ void Game::HandleInput()
 		{
 			if (mousePressed->button == sf::Mouse::Button::Left)
 			{
+				ImGuiIO& io = ImGui::GetIO();
+				if (io.WantCaptureMouse)
+				{
+					io.AddMouseButtonEvent(0, true);
+					continue;
+				}
+
 				for (auto& gameObject : gameObjects)
 				{
 					if (Boid* b = dynamic_cast<Boid*>(gameObject))
 					{
-						b->GetComponent<SeekBehavior>()->SetTarget(static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
+						// TODO: only perform these behaviors if components exist
+						if (seekEnabled)
+						{
+							b->GetComponent<SeekBehavior>()->SetTarget(static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
+						}
+						else if (fleeEnabled)
+						{
+							b->GetComponent<FleeBehavior>()->SetTarget(static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
+						}
 					}
 				}
 			}
@@ -83,7 +107,57 @@ void Game::Draw()
 		{
 			renderable->Draw(window);
 		}
+
+		Boid* b = dynamic_cast<Boid*>(g);
+		if (b != nullptr)
+		{
+			if (b->debugEnabled)
+				b->DrawDebug(window);
+		}
 	}
 
+	ImGui::SFML::Render(window);
+
 	window.display();
+}
+
+void Game::CreateBoidDebugMenu()
+{
+	ImGui::Begin("AI Movement Behaviors");
+
+	ImGui::BeginChild("Basic Steering");
+	if (ImGui::Checkbox("Seek", &this->seekEnabled))
+	{
+		std::cout << "Seek selected!" << std::endl;
+		fleeEnabled = false;
+
+		for (GameObject* go : gameObjects)
+		{
+			Boid* boid = dynamic_cast<Boid*>(go);
+			if (boid != nullptr)
+			{
+				boid->SetCurrentSteeringBehavior(Behavior::SEEK);
+			}
+		}
+	}
+
+	if (ImGui::Checkbox("Flee", &this->fleeEnabled))
+	{
+		std::cout << "Flee selected!" << std::endl;
+		seekEnabled = false;
+
+		for (GameObject* go : gameObjects)
+		{
+			Boid* boid = dynamic_cast<Boid*>(go);
+			if (boid != nullptr)
+			{
+				boid->SetCurrentSteeringBehavior(Behavior::FLEE);
+			}
+		}
+	}
+	ImGui::PushItemWidth(100.0f);
+	ImGui::SliderInt("Number of boids", &numBoids, 0, 100);
+	ImGui::EndChild();
+
+	ImGui::End();
 }

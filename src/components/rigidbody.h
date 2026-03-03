@@ -7,7 +7,7 @@
 
 #include "gameobject.h"
 #include "component.h"
-#include "steeringoutput.h"
+#include "steering/steeringoutput.h"
 
 class GameObject;
 

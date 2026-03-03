@@ -1,5 +1,5 @@
 #include "gameobject.h"
-#include "component.h"
+#include "components/component.h"
 
 GameObject::GameObject(sf::Vector2f goPosition, sf::Vector2f goRotation) 
 	: position(goPosition), rotation(goRotation) {}
@@ -18,11 +18,6 @@ void GameObject::Update(float deltaTime)
 	{
 		component->Update(deltaTime);
 	}
-}
-
-void GameObject::Draw()
-{
-
 }
 
 void GameObject::AddComponent(Component* component)

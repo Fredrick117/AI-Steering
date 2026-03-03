@@ -1,12 +1,19 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <array>
 
 #include "gameobject.h"
-#include "steeringoutput.h"
-#include "steeringbehavior.h"
+#include "steering/steeringoutput.h"
+#include "steering/steeringbehavior.h"
 
 class Rigidbody;
+
+enum class Behavior
+{
+	SEEK = 0,
+	FLEE = 1
+};
 
 class Boid : public GameObject
 {
@@ -20,4 +27,14 @@ public:
 	float maxSpeed = 500.0f;
 
 	sf::Vector2f targetPosition;
+
+	bool debugEnabled = true;
+	std::array<sf::Vertex, 2> debugDirectionLine;
+	void DrawDebug(sf::RenderWindow& window);
+
+	SteeringBehavior* GetCurrentSteeringBehavior();
+	void SetCurrentSteeringBehavior(Behavior newBehavior);
+
+private:
+	SteeringBehavior* currentBehavior = nullptr;
 };

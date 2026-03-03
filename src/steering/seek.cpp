@@ -1,13 +1,10 @@
-#include "steeringbehavior.h"
-#include "rigidbody.h"
+#include "seek.h"
 
 SteeringOutput SeekBehavior::GetSteering() const
 {
 	SteeringOutput steering;
 
-	sf::Vector2f targetPosition = target;
-
-	if (targetPosition.x != 0.0f && targetPosition.y != 0.0f)
+	if (target.x != 0.0f && target.y != 0.0f)
 	{
 		sf::Vector2f direction = target - parent->position;
 		direction = direction.normalized();
