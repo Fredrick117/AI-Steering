@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <iostream>
+#include <imgui.h>
+#include <imgui-SFML.h>
 
 #include "boid/boid.h"
 #include "gameobject.h"
@@ -11,9 +13,6 @@
 #include "components/rigidbody.h"
 #include "steering/flee.h"
 #include "steering/seek.h"
-
-#include <imgui.h>
-#include <imgui-SFML.h>
 
 class Game
 {

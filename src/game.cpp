@@ -107,6 +107,13 @@ void Game::Draw()
 		{
 			renderable->Draw(window);
 		}
+
+		Boid* b = dynamic_cast<Boid*>(g);
+		if (b != nullptr)
+		{
+			if (b->debugEnabled)
+				b->DrawDebug(window);
+		}
 	}
 
 	ImGui::SFML::Render(window);
