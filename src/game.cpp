@@ -130,12 +130,30 @@ void Game::CreateBoidDebugMenu()
 	{
 		std::cout << "Seek selected!" << std::endl;
 		fleeEnabled = false;
+
+		for (GameObject* go : gameObjects)
+		{
+			Boid* boid = dynamic_cast<Boid*>(go);
+			if (boid != nullptr)
+			{
+				boid->SetCurrentSteeringBehavior(Behavior::SEEK);
+			}
+		}
 	}
 
 	if (ImGui::Checkbox("Flee", &this->fleeEnabled))
 	{
 		std::cout << "Flee selected!" << std::endl;
 		seekEnabled = false;
+
+		for (GameObject* go : gameObjects)
+		{
+			Boid* boid = dynamic_cast<Boid*>(go);
+			if (boid != nullptr)
+			{
+				boid->SetCurrentSteeringBehavior(Behavior::FLEE);
+			}
+		}
 	}
 	ImGui::PushItemWidth(100.0f);
 	ImGui::SliderInt("Number of boids", &numBoids, 0, 100);

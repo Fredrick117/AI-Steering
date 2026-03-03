@@ -29,10 +29,12 @@ public:
 	sf::Vector2f targetPosition;
 
 	bool debugEnabled = true;
-
 	std::array<sf::Vertex, 2> debugDirectionLine;
-
-	Behavior currentBehavior = Behavior::SEEK;
-
 	void DrawDebug(sf::RenderWindow& window);
+
+	SteeringBehavior* GetCurrentSteeringBehavior();
+	void SetCurrentSteeringBehavior(Behavior newBehavior);
+
+private:
+	SteeringBehavior* currentBehavior = nullptr;
 };

@@ -13,6 +13,7 @@
 #include "components/rigidbody.h"
 #include "steering/flee.h"
 #include "steering/seek.h"
+#include "utilities.h"
 
 class Game
 {

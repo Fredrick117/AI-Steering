@@ -8,20 +8,17 @@ Boid::Boid()
 {
 	this->AddComponent(new SeekBehavior(this, 500.0f));
 	this->AddComponent(new FleeBehavior(this, 500.0f));
+
+	this->SetCurrentSteeringBehavior(Behavior::SEEK);
 }
 
 void Boid::Update(float deltaTime)
 {
 	GameObject::Update(deltaTime);
 
-	switch (currentBehavior)
+	if (this->currentBehavior != nullptr)
 	{
-	case Behavior::SEEK:
-		this->GetComponent<Rigidbody>()->steering = this->GetComponent<SeekBehavior>()->GetSteering();
-		break;
-	case Behavior::FLEE:
-		this->GetComponent<Rigidbody>()->steering = this->GetComponent<FleeBehavior>()->GetSteering();
-		break;
+		this->GetComponent<Rigidbody>()->steering = this->currentBehavior->GetSteering();
 	}
 
 	sf::Vector2 v = this->GetComponent<Rigidbody>()->velocity;
@@ -51,4 +48,23 @@ bool Boid::HasReachedDestination(sf::Vector2f destination, float tolerance)
 void Boid::DrawDebug(sf::RenderWindow& window)
 {
 	window.draw(this->debugDirectionLine.data(), this->debugDirectionLine.size(), sf::PrimitiveType::Lines);
+}
+
+SteeringBehavior* Boid::GetCurrentSteeringBehavior()
+{
+	return this->currentBehavior;
+}
+
+void Boid::SetCurrentSteeringBehavior(Behavior newBehavior)
+{
+	switch (newBehavior)
+	{
+	case Behavior::SEEK:
+		this->currentBehavior = this->GetComponent<SeekBehavior>();
+		break;
+		
+	case Behavior::FLEE:
+		this->currentBehavior = this->GetComponent<FleeBehavior>();
+		break;
+	}
 }
