@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <iostream>
+#include <string>
 #include <imgui.h>
 #include <imgui-SFML.h>
 
@@ -28,13 +29,20 @@ public:
 
 	void CreateBoidDebugMenu();
 
+	void SpawnBoid()
+	{
+		Boid* newBoid = new Boid();
+		newBoid->AddComponent(new Rigidbody(newBoid));
+		newBoid->AddComponent(new Renderable(newBoid, 10.0f));
+
+		gameObjects.push_back(newBoid);
+	}
+
 	sf::RenderWindow window;
 
 	std::vector<GameObject*> gameObjects;
 
-	// TODO: currently applies to all boids, only apply to selected ones in the future?
-	bool seekEnabled = true;
-	bool fleeEnabled = false;
+	std::array<const char*, 2> behaviorTypes;
 
 	int numBoids = 0;
 };

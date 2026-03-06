@@ -9,7 +9,7 @@
 
 class Rigidbody;
 
-enum class Behavior
+enum Behavior
 {
 	SEEK = 0,
 	FLEE = 1
@@ -35,6 +35,8 @@ public:
 	SteeringBehavior* GetCurrentSteeringBehavior();
 	void SetCurrentSteeringBehavior(Behavior newBehavior);
 
+	int currentBehavior = 0;
+
 private:
-	SteeringBehavior* currentBehavior = nullptr;
+	SteeringBehavior* behaviorData = nullptr;
 };

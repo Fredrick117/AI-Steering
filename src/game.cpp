@@ -5,6 +5,8 @@ Game::Game()
 	window = sf::RenderWindow(sf::VideoMode({ 800, 800 }), "Boids-A-Million");
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);	// TODO: cassert
+
+	behaviorTypes = { "Seek", "Flee" };
 }
 
 Game::~Game()
@@ -19,14 +21,6 @@ Game::~Game()
 
 void Game::Run()
 {
-	Boid* boid1 = new Boid();
-	boid1->AddComponent(new Rigidbody(boid1));
-	boid1->AddComponent(new Renderable(boid1, 10.0f));
-
-	Rigidbody* rb = boid1->GetComponent<Rigidbody>();
-
-	gameObjects.push_back(boid1);
-
 	sf::Clock dtClock;
 	while (window.isOpen())
 	{
@@ -80,14 +74,16 @@ void Game::HandleInput()
 				{
 					if (Boid* b = dynamic_cast<Boid*>(gameObject))
 					{
-						// TODO: only perform these behaviors if components exist
-						if (seekEnabled)
+						switch (b->currentBehavior)
 						{
-							b->GetComponent<SeekBehavior>()->SetTarget(static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
-						}
-						else if (fleeEnabled)
-						{
-							b->GetComponent<FleeBehavior>()->SetTarget(static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
+						case Behavior::SEEK:
+							b->GetComponent<SeekBehavior>()->SetTarget(
+								static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
+							break;
+						case Behavior::FLEE:
+							b->GetComponent<FleeBehavior>()->SetTarget(
+								static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
+							break;
 						}
 					}
 				}
@@ -125,38 +121,29 @@ void Game::CreateBoidDebugMenu()
 {
 	ImGui::Begin("AI Movement Behaviors");
 
-	ImGui::BeginChild("Basic Steering");
-	if (ImGui::Checkbox("Seek", &this->seekEnabled))
+	if (ImGui::Button("Add boid", { 70, 20 }))
 	{
-		std::cout << "Seek selected!" << std::endl;
-		fleeEnabled = false;
-
-		for (GameObject* go : gameObjects)
-		{
-			Boid* boid = dynamic_cast<Boid*>(go);
-			if (boid != nullptr)
-			{
-				boid->SetCurrentSteeringBehavior(Behavior::SEEK);
-			}
-		}
+		SpawnBoid();
 	}
 
-	if (ImGui::Checkbox("Flee", &this->fleeEnabled))
+	ImGui::TextColored(ImVec4(1, 0, 0, 1), "Boids");
+	ImGui::BeginChild("Scrolling");
+	for (int i = 0; i < gameObjects.size(); i++)
 	{
-		std::cout << "Flee selected!" << std::endl;
-		seekEnabled = false;
+		Boid* boid = dynamic_cast<Boid*>(gameObjects[i]);
+		if (boid == nullptr)
+			return;
 
-		for (GameObject* go : gameObjects)
+		ImGui::Text("Boid %02d", i + 1);
+		ImGui::SameLine();
+
+		std::string boidIdentifier = "##boid" + std::to_string(i);
+
+		if (ImGui::Combo(boidIdentifier.c_str(), &boid->currentBehavior, behaviorTypes.data(), behaviorTypes.size()))
 		{
-			Boid* boid = dynamic_cast<Boid*>(go);
-			if (boid != nullptr)
-			{
-				boid->SetCurrentSteeringBehavior(Behavior::FLEE);
-			}
+			boid->SetCurrentSteeringBehavior(static_cast<Behavior>(boid->currentBehavior));
 		}
 	}
-	ImGui::PushItemWidth(100.0f);
-	ImGui::SliderInt("Number of boids", &numBoids, 0, 100);
 	ImGui::EndChild();
 
 	ImGui::End();
