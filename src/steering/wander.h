@@ -1,0 +1,20 @@
+#pragma once
+
+#include <random>
+#include <math.h>
+
+#include "steeringbehavior.h"
+#include "steeringoutput.h"
+#include "utilities.h"
+
+class WanderBehavior : public SteeringBehavior
+{
+public:
+	WanderBehavior() = delete;
+	WanderBehavior(float maxSpeed) : maxSpeed(maxSpeed) {};
+
+	virtual SteeringOutput GetSteering() const override;
+
+private:
+	float maxSpeed = 500.0f;	// TODO: make this a property in SteeringBehavior?
+};

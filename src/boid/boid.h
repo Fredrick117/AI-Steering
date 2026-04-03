@@ -11,8 +11,9 @@ class Rigidbody;
 
 enum Behavior
 {
-	SEEK = 0,
-	FLEE = 1
+	SEEK,
+	FLEE,
+	WANDER
 };
 
 class Boid : public GameObject
@@ -28,7 +29,7 @@ public:
 
 	sf::Vector2f targetPosition;
 
-	bool debugEnabled = true;
+	bool debugEnabled = false;
 	std::array<sf::Vertex, 2> debugDirectionLine;
 	void DrawDebug(sf::RenderWindow& window);
 

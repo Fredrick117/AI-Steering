@@ -6,6 +6,7 @@
 #include <string>
 #include <imgui.h>
 #include <imgui-SFML.h>
+#include <random>
 
 #include "boid/boid.h"
 #include "gameobject.h"
@@ -33,7 +34,12 @@ public:
 	{
 		Boid* newBoid = new Boid();
 		newBoid->AddComponent(new Rigidbody(newBoid));
-		newBoid->AddComponent(new Renderable(newBoid, 10.0f));
+		newBoid->AddComponent(new Renderable(newBoid, "img/Boid.png"));
+		
+		int randomX = spawnBuffer + (rand() % window.getSize().x - spawnBuffer);
+		int randomY = spawnBuffer + (rand() % window.getSize().y - spawnBuffer);
+
+		newBoid->position = { static_cast<float>(randomX), static_cast<float>(randomY) };
 
 		gameObjects.push_back(newBoid);
 	}
@@ -42,7 +48,9 @@ public:
 
 	std::vector<GameObject*> gameObjects;
 
-	std::array<const char*, 2> behaviorTypes;
+	std::array<const char*, 3> behaviorTypes;
 
 	int numBoids = 0;
+
+	int spawnBuffer = 25;
 };

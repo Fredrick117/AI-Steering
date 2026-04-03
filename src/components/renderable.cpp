@@ -2,12 +2,18 @@
 #include "gameobject.h"
 #include "component.h"
 
-Renderable::Renderable(GameObject* newOwner, float circleRadius)
+#include <iostream>
+
+Renderable::Renderable(GameObject* newOwner, const std::string& texturePath) : texture(texturePath), sprite(texture)
 {
 	this->owner = newOwner;
 
-	sprite = sf::CircleShape(circleRadius);
-	sprite.setFillColor(sf::Color::Red);
+	/*if (!this->texture.loadFromFile("img/boid.png"))
+	{
+		std::cout << "ERROR: couldn't load texture!" << std::endl;
+	}
+
+	sprite = sf::Sprite(texture);*/
 }
 
 void Renderable::Draw(sf::RenderWindow& window)

@@ -9,13 +9,13 @@ class GameObject;
 class Renderable : public Component
 {
 public:
-	explicit Renderable(GameObject* newOwner, float circleRadius);
+	explicit Renderable(GameObject* newOwner, const std::string& texturePath);
 
-	// TODO: make this an sf::Sprite in the future
-	sf::CircleShape sprite;
+	sf::Sprite sprite;
 
 	void Draw(sf::RenderWindow& window);
 
 private:
 	GameObject* owner = nullptr;
+	sf::Texture texture;
 };

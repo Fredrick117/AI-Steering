@@ -31,10 +31,8 @@ set(IMGUI_SFML_IMGUI_DEMO ON)
 
 FetchContent_MakeAvailable(ImGui-SFML)
 
-add_executable(main src/main.cpp "src/game.h" "src/game.cpp" "src/gameobject.h" "src/gameobject.cpp" "src/components/rigidbody.h" "src/components/rigidbody.cpp" "src/boid/boid.h" "src/boid/boid.cpp" "src/components/component.h" "src/components/component.cpp" "src/components/renderable.h" "src/boid/boid.h" "src/components/renderable.cpp" "src/steering/steeringoutput.h" "src/steering/steeringoutput.cpp" "src/steering/steeringbehavior.h"  "src/steering/seek.h" "src/steering/flee.cpp" "src/steering/flee.h" "src/steering/seek.cpp" )
+add_executable(main src/main.cpp "src/game.h" "src/game.cpp" "src/gameobject.h" "src/gameobject.cpp" "src/components/rigidbody.h" "src/components/rigidbody.cpp" "src/boid/boid.h" "src/boid/boid.cpp" "src/components/component.h" "src/components/component.cpp" "src/components/renderable.h" "src/boid/boid.h" "src/components/renderable.cpp" "src/steering/steeringoutput.h" "src/steering/steeringoutput.cpp" "src/steering/steeringbehavior.h"  "src/steering/seek.h" "src/steering/flee.cpp" "src/steering/flee.h" "src/steering/seek.cpp" "src/steering/wander.h" "src/steering/wander.cpp")
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE ImGui-SFML::ImGui-SFML)
 target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/imgui)
-
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)

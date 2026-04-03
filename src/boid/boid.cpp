@@ -3,11 +3,13 @@
 #include "steering/steeringbehavior.h"
 #include "steering/seek.h"
 #include "steering/flee.h"
+#include "steering/wander.h"
 
 Boid::Boid()
 {
 	this->AddComponent(new SeekBehavior(this, 500.0f));
 	this->AddComponent(new FleeBehavior(this, 500.0f));
+	this->AddComponent(new WanderBehavior(500.0f));
 
 	this->SetCurrentSteeringBehavior(Behavior::SEEK);
 }
@@ -61,6 +63,9 @@ void Boid::SetCurrentSteeringBehavior(Behavior newBehavior)
 		
 	case Behavior::FLEE:
 		this->behaviorData = this->GetComponent<FleeBehavior>();
+		break;
+	case Behavior::WANDER:
+		this->behaviorData = this->GetComponent<WanderBehavior>();
 		break;
 	}
 }

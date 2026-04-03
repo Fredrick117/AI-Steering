@@ -6,7 +6,7 @@ Game::Game()
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);	// TODO: cassert
 
-	behaviorTypes = { "Seek", "Flee" };
+	behaviorTypes = { "Seek", "Flee", "Wander"};
 }
 
 Game::~Game()
