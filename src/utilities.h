@@ -12,12 +12,14 @@ namespace Utils
 {
 	inline constexpr double PI = 3.14159265358979323846;
 
+	// Returns true if the provided float is near zero (within 0.000001)
 	inline bool IsNearZero(float num)
 	{
 		const float epsilon = 1e-6f;
 		return std::abs(num) < epsilon;
 	}
 
+	// Returns whether the provided vector's components are exactly zero
 	inline bool Vector2fIsZero(const sf::Vector2f& inVector)
 	{
 		return (inVector.x == 0.0f && inVector.y == 0.0f);

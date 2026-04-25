@@ -2,7 +2,7 @@
 
 Game::Game()
 {
-	window = sf::RenderWindow(sf::VideoMode({ 800, 800 }), "Boids-A-Million");
+	window = sf::RenderWindow(sf::VideoMode({ 1920, 1080 }), "Boids-A-Million");
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);	// TODO: cassert
 
@@ -151,6 +151,12 @@ void Game::CreateBoidDebugMenu()
 		{
 			boid->SetCurrentSteeringBehavior(boid->currentBehavior);
 		}
+		
+		ImGui::Indent();
+		ImGui::PushID(i);
+		ImGui::Checkbox("Show direction?", &boid->debugEnabled);
+		ImGui::PopID();
+		ImGui::Unindent();
 	}
 
 	ImGui::EndChild();
