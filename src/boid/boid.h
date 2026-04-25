@@ -16,6 +16,8 @@ public:
 	Boid();
 	Boid(sf::Vector2f spawnPosition);
 
+	void BoidSetup();
+
 	~Boid();
 
 	void Update(float deltaTime) override;

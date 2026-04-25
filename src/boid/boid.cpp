@@ -3,6 +3,7 @@
 #include "steering/steeringbehavior.h"
 #include "steering/seek.h"
 #include "steering/flee.h"
+#include "steering/flock.h"
 #include "steering/wander.h"
 #include "steering/arrive.h"
 
@@ -10,39 +11,32 @@ constexpr auto BOID_RADIUS = 60.0f;
 
 Boid::Boid()
 {
-	auto addBehavior = [&](SteeringBehavior* b) {
-		this->AddComponent(b);
-		steeringBehaviors.push_back(b);
-	};
-
-	addBehavior(new SeekBehavior(this, 500.0f));
-	addBehavior(new FleeBehavior(this, 500.0f));
-	addBehavior(new WanderBehavior(500.0f));
-	addBehavior(new ArriveBehavior(this, 500.0f, 10.0f, 25.0f));
-
-	this->SetCurrentSteeringBehavior(0);
-
-	this->AddComponent(new Rigidbody(this));
-	this->AddComponent(new ShapeRenderable(this, sf::CircleShape(BOID_RADIUS), sf::Color::Cyan));
+	BoidSetup();
 }
 
 Boid::Boid(sf::Vector2f spawnPosition)
 {
+	BoidSetup();
+	this->position = spawnPosition;
+}
+
+void Boid::BoidSetup()
+{
 	auto addBehavior = [&](SteeringBehavior* b) {
 		this->AddComponent(b);
 		steeringBehaviors.push_back(b);
-	};
+		};
 
 	addBehavior(new SeekBehavior(this, 500.0f));
 	addBehavior(new FleeBehavior(this, 500.0f));
 	addBehavior(new WanderBehavior(500.0f));
 	addBehavior(new ArriveBehavior(this, 500.0f, 10.0f, 25.0f));
+	addBehavior(new FlockBehavior(this, nullptr, 500.0f));	// TODO: implement flockmates
 
 	this->SetCurrentSteeringBehavior(0);
 
 	this->AddComponent(new Rigidbody(this));
 	this->AddComponent(new ShapeRenderable(this, sf::CircleShape(BOID_RADIUS), sf::Color::Cyan));
-	this->position = spawnPosition;
 }
 
 void Boid::Update(float deltaTime)
