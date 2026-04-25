@@ -11,11 +11,10 @@ class Renderable : public Component
 public:
 	explicit Renderable(GameObject* newOwner, const std::string& texturePath);
 
-	sf::Sprite sprite;
-
 	void Draw(sf::RenderWindow& window);
 
 private:
 	GameObject* owner = nullptr;
 	sf::Texture texture;
+	sf::Sprite sprite;
 };

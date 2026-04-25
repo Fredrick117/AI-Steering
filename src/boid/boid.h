@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <array>
+#include <vector>
 
 #include "gameobject.h"
 #include "steering/steeringoutput.h"
@@ -9,17 +10,13 @@
 
 class Rigidbody;
 
-enum Behavior
-{
-	SEEK,
-	FLEE,
-	WANDER
-};
-
 class Boid : public GameObject
 {
 public:
 	Boid();
+	Boid(sf::Vector2f spawnPosition);
+
+	~Boid();
 
 	void Update(float deltaTime) override;
 
@@ -34,9 +31,13 @@ public:
 	void DrawDebug(sf::RenderWindow& window);
 
 	SteeringBehavior* GetCurrentSteeringBehavior();
-	void SetCurrentSteeringBehavior(Behavior newBehavior);
+	void SetCurrentSteeringBehavior(int index);
+
+	std::vector<const char*> GetBehaviorNames() const;
 
 	int currentBehavior = 0;
+
+	std::vector<SteeringBehavior*> steeringBehaviors;
 
 private:
 	SteeringBehavior* behaviorData = nullptr;

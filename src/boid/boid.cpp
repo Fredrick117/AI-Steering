@@ -4,14 +4,45 @@
 #include "steering/seek.h"
 #include "steering/flee.h"
 #include "steering/wander.h"
+#include "steering/arrive.h"
+
+constexpr auto BOID_RADIUS = 60.0f;
 
 Boid::Boid()
 {
-	this->AddComponent(new SeekBehavior(this, 500.0f));
-	this->AddComponent(new FleeBehavior(this, 500.0f));
-	this->AddComponent(new WanderBehavior(500.0f));
+	auto addBehavior = [&](SteeringBehavior* b) {
+		this->AddComponent(b);
+		steeringBehaviors.push_back(b);
+	};
 
-	this->SetCurrentSteeringBehavior(Behavior::SEEK);
+	addBehavior(new SeekBehavior(this, 500.0f));
+	addBehavior(new FleeBehavior(this, 500.0f));
+	addBehavior(new WanderBehavior(500.0f));
+	addBehavior(new ArriveBehavior(this, 500.0f, 10.0f, 25.0f));
+
+	this->SetCurrentSteeringBehavior(0);
+
+	this->AddComponent(new Rigidbody(this));
+	this->AddComponent(new ShapeRenderable(this, sf::CircleShape(BOID_RADIUS), sf::Color::Cyan));
+}
+
+Boid::Boid(sf::Vector2f spawnPosition)
+{
+	auto addBehavior = [&](SteeringBehavior* b) {
+		this->AddComponent(b);
+		steeringBehaviors.push_back(b);
+	};
+
+	addBehavior(new SeekBehavior(this, 500.0f));
+	addBehavior(new FleeBehavior(this, 500.0f));
+	addBehavior(new WanderBehavior(500.0f));
+	addBehavior(new ArriveBehavior(this, 500.0f, 10.0f, 25.0f));
+
+	this->SetCurrentSteeringBehavior(0);
+
+	this->AddComponent(new Rigidbody(this));
+	this->AddComponent(new ShapeRenderable(this, sf::CircleShape(BOID_RADIUS), sf::Color::Cyan));
+	this->position = spawnPosition;
 }
 
 void Boid::Update(float deltaTime)
@@ -24,7 +55,7 @@ void Boid::Update(float deltaTime)
 	}
 
 	sf::Vector2 v = this->GetComponent<Rigidbody>()->velocity;
-	if (v.x != 0.0f && v.y != 0.0f)
+	if (!Utils::Vector2fIsZero(v))
 	{
 		v = v.normalized();
 	}
@@ -53,19 +84,16 @@ SteeringBehavior* Boid::GetCurrentSteeringBehavior()
 	return this->behaviorData;
 }
 
-void Boid::SetCurrentSteeringBehavior(Behavior newBehavior)
+void Boid::SetCurrentSteeringBehavior(int index)
 {
-	switch (newBehavior)
-	{
-	case Behavior::SEEK:
-		this->behaviorData = this->GetComponent<SeekBehavior>();
-		break;
-		
-	case Behavior::FLEE:
-		this->behaviorData = this->GetComponent<FleeBehavior>();
-		break;
-	case Behavior::WANDER:
-		this->behaviorData = this->GetComponent<WanderBehavior>();
-		break;
-	}
+	if (index >= 0 && index < static_cast<int>(steeringBehaviors.size()))
+		this->behaviorData = steeringBehaviors[index];
+}
+
+std::vector<const char*> Boid::GetBehaviorNames() const
+{
+	std::vector<const char*> names;
+	for (auto* b : steeringBehaviors)
+		names.push_back(b->GetName());
+	return names;
 }

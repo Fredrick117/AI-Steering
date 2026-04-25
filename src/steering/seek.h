@@ -10,7 +10,8 @@ public:
 	SeekBehavior(GameObject* parent, float maxSpeed) : parent(parent), maxSpeed(maxSpeed) {};
 
 	virtual SteeringOutput GetSteering() const override;
-	void SetTarget(sf::Vector2f target);
+	const char* GetName() const override { return "Seek"; }
+	void SetTarget(sf::Vector2f target) override;
 
 private:
 	sf::Vector2f target;

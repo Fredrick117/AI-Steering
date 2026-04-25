@@ -2,7 +2,7 @@
 
 SteeringOutput WanderBehavior::GetSteering() const
 {
-	float phi = rand() * (2.0 * PI()) / RAND_MAX;
+	float phi = rand() * (2.0 * Utils::PI) / RAND_MAX;
 
 	float x = cos(phi);
 	float y = sin(phi);

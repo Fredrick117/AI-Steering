@@ -14,6 +14,7 @@ public:
 	WanderBehavior(float maxSpeed) : maxSpeed(maxSpeed) {};
 
 	virtual SteeringOutput GetSteering() const override;
+	const char* GetName() const override { return "Wander"; }
 
 private:
 	float maxSpeed = 500.0f;	// TODO: make this a property in SteeringBehavior?

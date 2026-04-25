@@ -6,7 +6,6 @@ Game::Game()
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);	// TODO: cassert
 
-	behaviorTypes = { "Seek", "Flee", "Wander"};
 }
 
 Game::~Game()
@@ -74,19 +73,14 @@ void Game::HandleInput()
 				{
 					if (Boid* b = dynamic_cast<Boid*>(gameObject))
 					{
-						switch (b->currentBehavior)
-						{
-						case Behavior::SEEK:
-							b->GetComponent<SeekBehavior>()->SetTarget(
-								static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
-							break;
-						case Behavior::FLEE:
-							b->GetComponent<FleeBehavior>()->SetTarget(
-								static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
-							break;
-						}
+						b->GetCurrentSteeringBehavior()->SetTarget(
+							static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
 					}
 				}
+			}
+			else if (mousePressed->button == sf::Mouse::Button::Middle)
+			{
+				Utils::SpawnBoidAtMousePosition(this->window, gameObjects);
 			}
 		}
 	}
@@ -102,6 +96,12 @@ void Game::Draw()
 		if (renderable != nullptr)
 		{
 			renderable->Draw(window);
+		}
+
+		ShapeRenderable* shapeRenderable = g->GetComponent<ShapeRenderable>();
+		if (shapeRenderable != nullptr)
+		{
+			shapeRenderable->Draw(window);
 		}
 
 		Boid* b = dynamic_cast<Boid*>(g);
@@ -128,6 +128,7 @@ void Game::CreateBoidDebugMenu()
 
 	ImGui::TextColored(ImVec4(1, 0, 0, 1), "Boids");
 	ImGui::BeginChild("Scrolling");
+
 	for (int i = 0; i < gameObjects.size(); i++)
 	{
 		Boid* boid = dynamic_cast<Boid*>(gameObjects[i]);
@@ -137,13 +138,21 @@ void Game::CreateBoidDebugMenu()
 		ImGui::Text("Boid %02d", i + 1);
 		ImGui::SameLine();
 
+		/*if (ImGui::SmallButton("Delete"))
+		{
+			std::cout << "begone!" << std::endl;
+		}
+		ImGui::SameLine();*/
+
 		std::string boidIdentifier = "##boid" + std::to_string(i);
 
-		if (ImGui::Combo(boidIdentifier.c_str(), &boid->currentBehavior, behaviorTypes.data(), behaviorTypes.size()))
+		auto names = boid->GetBehaviorNames();
+		if (ImGui::Combo(boidIdentifier.c_str(), &boid->currentBehavior, names.data(), static_cast<int>(names.size())))
 		{
-			boid->SetCurrentSteeringBehavior(static_cast<Behavior>(boid->currentBehavior));
+			boid->SetCurrentSteeringBehavior(boid->currentBehavior);
 		}
 	}
+
 	ImGui::EndChild();
 
 	ImGui::End();
