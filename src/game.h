@@ -7,6 +7,7 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 #include <random>
+#include <memory>
 
 #include "boid/boid.h"
 #include "gameobject.h"
@@ -27,23 +28,22 @@ public:
 	void HandleInput();
 	void Draw();
 
-	void CreateBoidDebugMenu();
+	void CreateBoidDebugMenu(); // TODO: rename to "DrawBoidDebugMenu"
+	void DrawFPSCounter();
 
 	void SpawnBoid()
 	{
 		int randomX = spawnBuffer + (rand() % window.getSize().x - spawnBuffer);
 		int randomY = spawnBuffer + (rand() % window.getSize().y - spawnBuffer);
+		sf::Vector2f spawnPosition = sf::Vector2f(randomX, randomY);
 		
-		Boid* newBoid = new Boid({ static_cast<float>(randomX), static_cast<float>(randomY) });
-		
-		gameObjects.push_back(newBoid);
+		gameObjects.push_back(std::make_shared<Boid>(spawnPosition));
 	}
 
 	sf::RenderWindow window;
 
-	std::vector<GameObject*> gameObjects;
-
-	int numBoids = 0;
+	// TODO: move this data into an ECS architecture?
+	std::vector<std::shared_ptr<GameObject>> gameObjects;
 
 	int spawnBuffer = 25;
 };

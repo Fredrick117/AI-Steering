@@ -31,7 +31,7 @@ void Boid::BoidSetup()
 	addBehavior(new FleeBehavior(this, 500.0f));
 	addBehavior(new WanderBehavior(500.0f));
 	addBehavior(new ArriveBehavior(this, 500.0f, 10.0f, 25.0f));
-	addBehavior(new FlockBehavior(this, nullptr, 500.0f));	// TODO: implement flockmates
+	addBehavior(new FlockBehavior(this, {}, 500.0f));	// TODO: implement flockmates
 
 	this->SetCurrentSteeringBehavior(0);
 

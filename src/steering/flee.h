@@ -9,7 +9,7 @@ public:
 	FleeBehavior() = delete;
 	FleeBehavior(GameObject* parent, float maxSpeed) : parent(parent), maxSpeed(maxSpeed) {};
 
-	virtual SteeringOutput GetSteering() const override;
+	virtual SteeringOutput GetSteering() override;
 	const char* GetName() const override { return "Flee"; }
 	void SetTarget(sf::Vector2f target) override;
 

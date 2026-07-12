@@ -1,6 +1,6 @@
 #include "seek.h"
 
-SteeringOutput SeekBehavior::GetSteering() const
+SteeringOutput SeekBehavior::GetSteering()
 {
 	SteeringOutput steering;
 

@@ -18,8 +18,6 @@ public:
 
 	void BoidSetup();
 
-	~Boid();
-
 	void Update(float deltaTime) override;
 
 	bool HasReachedDestination(sf::Vector2f destination, float tolerance);
@@ -40,6 +38,8 @@ public:
 	int currentBehavior = 0;
 
 	std::vector<SteeringBehavior*> steeringBehaviors;
+
+	bool isFlockLeader = false;
 
 private:
 	SteeringBehavior* behaviorData = nullptr;

@@ -32,10 +32,10 @@ namespace Utils
 	}
 
 	// Spawns a boid at the mouse's position
-	inline void SpawnBoidAtMousePosition(const sf::RenderWindow& window, std::vector<GameObject*>& gameObjects)
+	inline void SpawnBoidAtMousePosition(const sf::RenderWindow& window, std::vector<std::shared_ptr<GameObject>>& gameObjects)
 	{
 		sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
-		Boid* newBoid = new Boid({ static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y) });
-		gameObjects.push_back(newBoid);
+		std::shared_ptr<Boid> go = std::make_shared<Boid>(static_cast<sf::Vector2f>(mousePosition));
+		gameObjects.push_back(go);
 	}
 }

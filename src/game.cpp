@@ -10,11 +10,6 @@ Game::Game()
 
 Game::~Game()
 {
-	for (auto& gameObject : gameObjects)
-	{
-		delete gameObject;
-	}
-
 	ImGui::SFML::Shutdown();
 }
 
@@ -26,6 +21,7 @@ void Game::Run()
 		HandleInput();
 		Update(dtClock.restart().asSeconds());
 		CreateBoidDebugMenu();
+		DrawFPSCounter();
 		Draw();
 	}
 }
@@ -69,11 +65,12 @@ void Game::HandleInput()
 					continue;
 				}
 
-				for (auto& gameObject : gameObjects)
+				for (const auto& gameObject : gameObjects)
 				{
-					if (Boid* b = dynamic_cast<Boid*>(gameObject))
+					std::shared_ptr<Boid> boid = std::dynamic_pointer_cast<Boid>(gameObject);
+					if (boid != nullptr)
 					{
-						b->GetCurrentSteeringBehavior()->SetTarget(
+						boid->GetCurrentSteeringBehavior()->SetTarget(
 							static_cast<sf::Vector2f>(sf::Mouse::getPosition(this->window)));
 					}
 				}
@@ -90,25 +87,24 @@ void Game::Draw()
 {
 	window.clear();
 
-	for (GameObject* g : gameObjects)
+	for (const auto& gameObject : gameObjects)
 	{
-		Renderable* renderable = g->GetComponent<Renderable>();
+		Renderable* renderable = gameObject->GetComponent<Renderable>();
 		if (renderable != nullptr)
 		{
 			renderable->Draw(window);
 		}
 
-		ShapeRenderable* shapeRenderable = g->GetComponent<ShapeRenderable>();
+		ShapeRenderable* shapeRenderable = gameObject->GetComponent<ShapeRenderable>();
 		if (shapeRenderable != nullptr)
 		{
 			shapeRenderable->Draw(window);
 		}
 
-		Boid* b = dynamic_cast<Boid*>(g);
-		if (b != nullptr)
+		std::shared_ptr<Boid> boid = std::dynamic_pointer_cast<Boid>(gameObject);
+		if (boid != nullptr && boid->debugEnabled)
 		{
-			if (b->debugEnabled)
-				b->DrawDebug(window);
+			boid->DrawDebug(window);
 		}
 	}
 
@@ -129,13 +125,14 @@ void Game::CreateBoidDebugMenu()
 	ImGui::TextColored(ImVec4(1, 0, 0, 1), "Boids");
 	ImGui::BeginChild("Scrolling");
 
-	for (int i = 0; i < gameObjects.size(); i++)
+	int boidCounter = 1;
+	for (const auto& gameObject : gameObjects)
 	{
-		Boid* boid = dynamic_cast<Boid*>(gameObjects[i]);
+		std::shared_ptr<Boid> boid = std::dynamic_pointer_cast<Boid>(gameObject);
 		if (boid == nullptr)
-			return;
+			continue;
 
-		ImGui::Text("Boid %02d", i + 1);
+		ImGui::Text("Boid %02d", boidCounter + 1);
 		ImGui::SameLine();
 
 		/*if (ImGui::SmallButton("Delete"))
@@ -144,7 +141,7 @@ void Game::CreateBoidDebugMenu()
 		}
 		ImGui::SameLine();*/
 
-		std::string boidIdentifier = "##boid" + std::to_string(i);
+		std::string boidIdentifier = "##boid" + std::to_string(boidCounter);
 
 		auto names = boid->GetBehaviorNames();
 		if (ImGui::Combo(boidIdentifier.c_str(), &boid->currentBehavior, names.data(), static_cast<int>(names.size())))
@@ -153,7 +150,7 @@ void Game::CreateBoidDebugMenu()
 		}
 		
 		ImGui::Indent();
-		ImGui::PushID(i);
+		ImGui::PushID(boidCounter);
 		ImGui::Checkbox("Show direction?", &boid->debugEnabled);
 		ImGui::PopID();
 		ImGui::Unindent();
@@ -161,5 +158,12 @@ void Game::CreateBoidDebugMenu()
 
 	ImGui::EndChild();
 
+	ImGui::End();
+}
+
+void Game::DrawFPSCounter()
+{
+	ImGui::Begin("FPS");
+	ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
 	ImGui::End();
 }

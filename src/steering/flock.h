@@ -4,6 +4,7 @@
 #include <iostream>
 #include "steeringbehavior.h"
 #include "steeringoutput.h"
+#include "seek.h"
 
 class Boid;
 
@@ -11,11 +12,13 @@ class FlockBehavior : public SteeringBehavior
 {
 public:
 	FlockBehavior() = delete;
-	FlockBehavior(Boid* parent, const std::vector<Boid*>* flock, float maxSpeed)
+	FlockBehavior(Boid* parent, const std::vector<Boid*> flock, float maxSpeed)
 		: parent(parent), flock(flock), maxSpeed(maxSpeed) {};
 
-	virtual SteeringOutput GetSteering() const override;
+	virtual SteeringOutput GetSteering() override;
 	const char* GetName() const override { return "Flock"; }
+	void SetTarget(sf::Vector2f target) override;
+	Boid* GetFlockLeader() const;
 
 	float neighborRadius = 150.0f;
 	float separationRadius = 40.0f;
@@ -26,6 +29,11 @@ public:
 
 private:
 	Boid* parent;
-	const std::vector<Boid*>* flock;
+	const std::vector<Boid*> flock;
 	float maxSpeed;
+	sf::Vector2f target;
+
+	SteeringOutput Alignment();
+	SteeringOutput Cohesion();
+	SteeringOutput Separation();
 };

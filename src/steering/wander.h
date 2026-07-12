@@ -13,7 +13,7 @@ public:
 	WanderBehavior() = delete;
 	WanderBehavior(float maxSpeed) : maxSpeed(maxSpeed) {};
 
-	virtual SteeringOutput GetSteering() const override;
+	virtual SteeringOutput GetSteering() override;
 	const char* GetName() const override { return "Wander"; }
 
 private:

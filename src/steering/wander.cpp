@@ -1,6 +1,6 @@
 #include "wander.h"
 
-SteeringOutput WanderBehavior::GetSteering() const
+SteeringOutput WanderBehavior::GetSteering()
 {
 	float phi = rand() * (2.0 * Utils::PI) / RAND_MAX;
 

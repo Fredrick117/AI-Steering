@@ -1,6 +1,6 @@
 #include "flee.h"
 
-SteeringOutput FleeBehavior::GetSteering() const
+SteeringOutput FleeBehavior::GetSteering()
 {
 	SteeringOutput steering;
 

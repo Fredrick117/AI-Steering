@@ -1,6 +1,6 @@
 #include "arrive.h"
 
-SteeringOutput ArriveBehavior::GetSteering() const
+SteeringOutput ArriveBehavior::GetSteering()
 {
 	SteeringOutput steering;
 
@@ -9,11 +9,11 @@ SteeringOutput ArriveBehavior::GetSteering() const
 
 	Rigidbody* rigidbody = this->parent->GetComponent<Rigidbody>();
 
-	/*if (targetRadius < distance && Vector2fIsZero(rigidbody->velocity))
+	if (targetRadius < distance)
 	{
 		rigidbody->velocity = sf::Vector2f(0.0f, 0.0f);
 		return steering;
-	}*/
+	}
 
 	float rampedSpeed = this->maxSpeed * (distance / this->slowRadius);
 	float clippedSpeed = std::min(rampedSpeed, this->maxSpeed);

@@ -9,7 +9,7 @@ public:
 	SeekBehavior() = delete;
 	SeekBehavior(GameObject* parent, float maxSpeed) : parent(parent), maxSpeed(maxSpeed) {};
 
-	virtual SteeringOutput GetSteering() const override;
+	virtual SteeringOutput GetSteering() override;
 	const char* GetName() const override { return "Seek"; }
 	void SetTarget(sf::Vector2f target) override;
 

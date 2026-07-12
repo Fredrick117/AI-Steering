@@ -14,7 +14,7 @@ public:
 	ArriveBehavior(GameObject* parent, float maxSpeed, float slowRadius, float targetRadius)
 		: parent(parent), maxSpeed(maxSpeed), slowRadius(slowRadius), targetRadius(targetRadius) {};
 
-	virtual SteeringOutput GetSteering() const override;
+	virtual SteeringOutput GetSteering() override;
 	const char* GetName() const override { return "Arrive"; }
 	void SetTarget(sf::Vector2f target) override;
 
