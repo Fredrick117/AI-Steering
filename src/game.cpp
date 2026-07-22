@@ -2,7 +2,7 @@
 
 Game::Game()
 {
-	window = sf::RenderWindow(sf::VideoMode({ 1920, 1080 }), "Boids-A-Million");
+	window = sf::RenderWindow(sf::VideoMode({ DEFAULT_WIN_SIZE_X, DEFAULT_WIN_SIZE_Y }), "Boids-A-Million");
 	window.setFramerateLimit(60);
 	ImGui::SFML::Init(window);	// TODO: cassert
 
@@ -51,7 +51,7 @@ void Game::HandleInput()
 		{
 			if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
 			{
-				std::cout << "escape" << std::endl;
+				window.close();
 			}
 		}
 		else if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>())
@@ -115,6 +115,8 @@ void Game::Draw()
 
 void Game::CreateBoidDebugMenu()
 {
+	ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Once);
+
 	ImGui::Begin("AI Movement Behaviors");
 
 	if (ImGui::Button("Add boid", { 70, 20 }))
@@ -132,7 +134,7 @@ void Game::CreateBoidDebugMenu()
 		if (boid == nullptr)
 			continue;
 
-		ImGui::Text("Boid %02d", boidCounter + 1);
+		ImGui::Text("Boid %02d", boidCounter);
 		ImGui::SameLine();
 
 		/*if (ImGui::SmallButton("Delete"))
@@ -154,6 +156,8 @@ void Game::CreateBoidDebugMenu()
 		ImGui::Checkbox("Show direction?", &boid->debugEnabled);
 		ImGui::PopID();
 		ImGui::Unindent();
+
+		boidCounter++;
 	}
 
 	ImGui::EndChild();
@@ -163,6 +167,8 @@ void Game::CreateBoidDebugMenu()
 
 void Game::DrawFPSCounter()
 {
+	ImGui::SetNextWindowPos(ImVec2(DEFAULT_WIN_SIZE_X - 150.f, 0.0f), ImGuiCond_Once);
+
 	ImGui::Begin("FPS");
 	ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
 	ImGui::End();

@@ -7,7 +7,7 @@ Rigidbody::Rigidbody(GameObject* newOwner)
 
 void Rigidbody::Update(float deltaTime)
 {
-	this->velocity += steering.direction * deltaTime;
+	velocity += steering.direction * deltaTime;
 
 	if (owner == nullptr)
 	{
@@ -15,11 +15,10 @@ void Rigidbody::Update(float deltaTime)
 		return;
 	}
 
-	owner->position += velocity * deltaTime;
-
-	if (this->velocity.length() > maxSpeed)
+	if (velocity.length() > maxSpeed)
 	{
-		this->velocity = this->velocity.normalized();
-		this->velocity *= maxSpeed;
+		velocity = velocity.normalized() * maxSpeed;
 	}
+
+	owner->position += velocity * deltaTime;
 }

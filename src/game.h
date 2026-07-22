@@ -17,6 +17,9 @@
 #include "components/rigidbody.h"
 #include "utilities.h"
 
+#define DEFAULT_WIN_SIZE_X 1920
+#define DEFAULT_WIN_SIZE_Y 1080
+
 class Game
 {
 public:

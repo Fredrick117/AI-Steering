@@ -9,20 +9,28 @@ SteeringOutput ArriveBehavior::GetSteering()
 
 	Rigidbody* rigidbody = this->parent->GetComponent<Rigidbody>();
 
-	if (targetRadius < distance)
+	if (distance < targetRadius)
 	{
-		rigidbody->velocity = sf::Vector2f(0.0f, 0.0f);
 		return steering;
 	}
 
 	float rampedSpeed = this->maxSpeed * (distance / this->slowRadius);
 	float clippedSpeed = std::min(rampedSpeed, this->maxSpeed);
 
-	steering.direction = (clippedSpeed / distance) * directionToTarget;
-	steering.direction -= rigidbody->velocity;
+	/*float targetSpeed;
+	if (distance > slowRadius)
+	{
+		targetSpeed = maxSpeed;
+	}
+	else
+	{
+		targetSpeed = maxSpeed * (distance / slowRadius);
+	}*/
 
-	std::cout << "Steering.direction.x = " << steering.direction.x << std::endl;
-	std::cout << "Steering.direction.y = " << steering.direction.y << std::endl;
+	//sf::Vector2f targetVelocity = (directionToTarget / distance) * targetSpeed;
+	sf::Vector2f targetVelocity = (clippedSpeed / distance) * directionToTarget;
+
+	steering.direction = targetVelocity - rigidbody->velocity;
 
 	return steering;
 }
