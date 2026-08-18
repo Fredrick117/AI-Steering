@@ -85,7 +85,7 @@ void Game::HandleInput()
 
 void Game::Draw()
 {
-	window.clear();
+	window.clear({204, 204, 204});
 
 	for (const auto& gameObject : gameObjects)
 	{
@@ -121,7 +121,7 @@ void Game::CreateBoidDebugMenu()
 
 	if (ImGui::Button("Add boid", { 70, 20 }))
 	{
-		SpawnBoid();
+		SpawnBoidAtRandomPosition();
 	}
 
 	ImGui::TextColored(ImVec4(1, 0, 0, 1), "Boids");

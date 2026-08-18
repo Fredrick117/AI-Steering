@@ -34,10 +34,15 @@ public:
 	void CreateBoidDebugMenu(); // TODO: rename to "DrawBoidDebugMenu"
 	void DrawFPSCounter();
 
-	void SpawnBoid()
+	void SpawnBoidAtRandomPosition()
 	{
-		int randomX = spawnBuffer + (rand() % window.getSize().x - spawnBuffer);
-		int randomY = spawnBuffer + (rand() % window.getSize().y - spawnBuffer);
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<int> distributionX(spawnBuffer, window.getSize().x - spawnBuffer);
+		std::uniform_int_distribution<int> distributionY(spawnBuffer, window.getSize().y - spawnBuffer);
+
+		int randomX = distributionX(gen);
+		int randomY = distributionY(gen);
 		sf::Vector2f spawnPosition = sf::Vector2f(randomX, randomY);
 		
 		gameObjects.push_back(std::make_shared<Boid>(spawnPosition));

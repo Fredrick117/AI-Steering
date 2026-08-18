@@ -19,6 +19,7 @@ public:
 	const char* GetName() const override { return "Flock"; }
 	void SetTarget(sf::Vector2f target) override;
 	Boid* GetFlockLeader() const;
+	void AddBoidToFlock(Boid* boid);
 
 	float neighborRadius = 150.0f;
 	float separationRadius = 40.0f;
@@ -29,7 +30,7 @@ public:
 
 private:
 	Boid* parent;
-	const std::vector<Boid*> flock;
+	std::vector<Boid*> flock;
 	float maxSpeed;
 	sf::Vector2f target;
 

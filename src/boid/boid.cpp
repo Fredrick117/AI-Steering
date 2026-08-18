@@ -22,10 +22,11 @@ Boid::Boid(sf::Vector2f spawnPosition)
 
 void Boid::BoidSetup()
 {
-	auto addBehavior = [&](SteeringBehavior* b) {
+	auto addBehavior = [&](SteeringBehavior* b)
+	{
 		this->AddComponent(b);
 		steeringBehaviors.push_back(b);
-		};
+	};
 
 	addBehavior(new SeekBehavior(this, 500.0f));
 	addBehavior(new FleeBehavior(this, 500.0f));
@@ -36,7 +37,7 @@ void Boid::BoidSetup()
 	this->SetCurrentSteeringBehavior(0);
 
 	this->AddComponent(new Rigidbody(this));
-	this->AddComponent(new ShapeRenderable(this, sf::CircleShape(BOID_RADIUS), sf::Color::Cyan));
+	this->AddComponent(new ShapeRenderable(this, sf::CircleShape(BOID_RADIUS), sf::Color(74, 141, 71)));
 }
 
 void Boid::Update(float deltaTime)

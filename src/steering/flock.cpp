@@ -40,6 +40,11 @@ Boid* FlockBehavior::GetFlockLeader() const
 	return nullptr;
 }
 
+void FlockBehavior::AddBoidToFlock(Boid* boid)
+{
+	this->flock.push_back(boid);
+}
+
 SteeringOutput FlockBehavior::Alignment()
 {
 	SteeringOutput steering;
